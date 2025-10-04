@@ -110,7 +110,7 @@ def validate_epoch(model, validation_dataloader, device):
 							labels=labels)
 
 			loss = outputs.loss
-			total_loss = loss.item()
+			total_loss += loss.item()
 
 			# progress bar
 			pbar.update(1)
