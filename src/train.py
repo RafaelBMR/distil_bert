@@ -19,7 +19,7 @@ def run(args):
 
 	# Convert dataset to DistilBERT's input format, and
 	# put it in dataloaders
-	dataloaders = prepare_data(data, len(id2label), args)
+	dataloaders, tokenizer = prepare_data(data, len(id2label), args)
 
 	# Train the model and returns its best version
 	model = load_model(args.model_name_or_path, id2label)
@@ -44,8 +44,9 @@ def run(args):
 		# Evaluates best model on the test set
 		test_model(model, dataloaders['test'], id2label, args)
 
-	# Saving best model
+	# Saving best model along with the tokenizer for ease of use
 	model.save_pretrained(os.path.join(args.output_path, "best_model"))
+	tokenizer.save_pretrained(os.path.join(args.output_path, "best_model"))
 
 
 

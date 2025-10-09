@@ -112,5 +112,5 @@ def prepare_data(data, num_classes, args):
 		"test": test_dataloader
 	}
 
-	return dataloaders
+	return dataloaders, tokenizer
 	

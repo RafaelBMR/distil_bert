@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<h1>Overall metrics</h1>
+	<p>Number of samples: {{ n_samples }}</p>
+	<hr>
+	<table border="1" cellspacing="0" cellpadding="5">
+		<thead>
+			<tr>
+				<td>Average Type</td>
+				<td>F1-score</td>
+				<td>Precision</td>
+				<td>Recall</td>
+			</tr>
+		</thead>
+		<tbody>
+			{% for metric in metrics %}
+				<tr>
+					<td>{{ metric.average_type }}</td>
+					<td>{{ "%.2f" | format(metric.f1) }}</td>
+					<td>{{ "%.2f" | format(metric.precision) }}</td>
+					<td>{{ "%.2f" | format(metric.recall) }}</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+	<h1>Per class f1-score</h1>
+	<img src="data:image/png;base64,{{ f1_plot }}">
+	<h1>Per class precision and recall</h1>
+	<img src="data:image/png;base64,{{ pr_plot }}">
+</body>
+</html>
