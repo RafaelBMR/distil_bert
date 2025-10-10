@@ -17,6 +17,9 @@ import mlflow
 from jinja2 import Environment, FileSystemLoader
 
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+
 def save_report(report_df, args):
     """
         Saves an HTML file containing overall metrics and per class metrics
@@ -89,7 +92,7 @@ def save_report(report_df, args):
         "pr_plot": encoded_pr
     }
 
-    loader = FileSystemLoader("templates/")
+    loader = FileSystemLoader(os.path.join(BASE_DIR, "../templates/"))
     env = Environment(loader=loader)
     template = env.get_template("report.html")
     output = template.render(data)
