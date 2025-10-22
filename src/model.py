@@ -32,7 +32,9 @@ def load_model(name_or_path, id2label):
 def load_finetuned_model(name_or_path):
 
 	model = DistilBertForSequenceClassification.from_pretrained(
-				pretrained_model_name_or_path=name_or_path)
+				pretrained_model_name_or_path=name_or_path,
+				output_hidden_states=True  # Ensure hidden states are returned
+				)
 
 	return model
 

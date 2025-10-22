@@ -13,6 +13,7 @@ from src.model import load_finetuned_model
 class PredictRequest(BaseModel):
     texts: List[str]
     threshold: Optional[float] = 0.5  # threshold for multi-label selection
+    return_cls_embedding: Optional[bool] = False  # if True, return CLS embedding
 
 
 class PredictResponse(BaseModel):
@@ -78,6 +79,11 @@ def predict(request: PredictRequest):
         outputs = model(input_ids=input_ids, attention_mask=attention_mask)
         logits = outputs.logits
         probs = torch.sigmoid(logits)
+        if request.return_cls_embedding:
+            last_hidden = outputs.hidden_states[-1]
+            cls_embeddings = last_hidden[:, 0, :].cpu().numpy().tolist()
+        else:
+            cls_embeddings = None
 
     probs = probs.cpu()
 
@@ -94,10 +100,13 @@ def predict(request: PredictRequest):
             class_probs[label_name] = prob
             if prob >= (request.threshold if request.threshold is not None else 0.5):
                 predicted_classes.append(label_name)
-        results.append({
+        result = {
             "class_probabilities": class_probs,
             "predicted_classes": predicted_classes
-        })
+        }
+        if request.return_cls_embedding and cls_embeddings is not None:
+            result["cls_embedding"] = cls_embeddings[i]
+        results.append(result)
 
     return {"results": results}
 
