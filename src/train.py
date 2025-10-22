@@ -4,12 +4,12 @@ import os
 
 import mlflow
 
-from preprocessing import load_data
-from preprocessing import prepare_data
+from src.preprocessing import load_data
+from src.preprocessing import prepare_data
 
-from model import load_model, train_model
+from src.model import load_model, train_model
 
-from evaluate import test_model
+from src.evaluate import test_model
 
 
 def run(args):

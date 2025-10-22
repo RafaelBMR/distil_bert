@@ -14,7 +14,7 @@ import mlflow.pytorch
 
 from torch.utils.tensorboard import SummaryWriter
 
-from log_utils import LOG_LAYERS
+from src.log_utils import LOG_LAYERS
 
 
 
@@ -25,6 +25,14 @@ def load_model(name_or_path, id2label):
 				problem_type="multi_label_classification",
 				id2label=id2label,
 				label2id={v: k for k, v in id2label.items()})
+
+	return model
+
+
+def load_finetuned_model(name_or_path):
+
+	model = DistilBertForSequenceClassification.from_pretrained(
+				pretrained_model_name_or_path=name_or_path)
 
 	return model
 

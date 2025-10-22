@@ -5,7 +5,7 @@ This repository contains code to train and evaluate a DistilBERT for multilabel 
 ## Example of training command
 
 ```
-python src/train.py \
+python -m src.train \
 	--dataset-path "input_data" \
 	--model-name-or-path "distilbert-base-uncased" \
 	--max-length 128 \
