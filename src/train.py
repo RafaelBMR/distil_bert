@@ -62,7 +62,8 @@ if __name__ == "__main__":
 							 "a key \"text\", containing the sample's text, and "
 							 "\"labels\" containing a list of ids; \"validation.json\" "
 							 "and \"test.json\" in the same format; and \"id2label.json\" "
-							 "mapping ids of labels and their names.",
+							 "mapping ids of labels and their names."
+							 " It may also contain additional training data, preffixed with 'additional_train'.",
 						type=pathlib.Path)
 
 	parser.add_argument("--model-name-or-path", type=str)

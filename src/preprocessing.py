@@ -34,6 +34,14 @@ def load_data(args):
 		"test": test_data,
 	}
 
+	# Checks for additional training data
+	for filename in os.listdir(args.datast_path):
+		if filename.startswith("additional_train") and filename.endswith(".json"):
+			print("Using additional training data from ", filename)
+			with open(os.path.join(args.dataset_path, filename)) as f:
+				additional_data = json.loads(f.read())
+			data['train'].extend(additional_data)
+
 
 	return (data, id2label)
 
