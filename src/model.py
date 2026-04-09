@@ -14,7 +14,7 @@ import mlflow.pytorch
 
 from torch.utils.tensorboard import SummaryWriter
 
-from src.log_utils import LOG_LAYERS
+from .log_utils import LOG_LAYERS
 
 
 

@@ -7,7 +7,7 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from transformers import DistilBertTokenizerFast
 
-from src.model import load_finetuned_model
+from .model import load_finetuned_model
 
 
 class PredictRequest(BaseModel):
