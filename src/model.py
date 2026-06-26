@@ -1,10 +1,13 @@
 import os
 import shutil
+import argparse
 
 from tqdm import tqdm
 
 import torch
 from torch.optim import AdamW
+from torch.utils.data import DataLoader
+from torch.utils.data import ConcatDataset, Subset
 
 from transformers import DistilBertForSequenceClassification
 from transformers import get_linear_schedule_with_warmup
@@ -15,6 +18,7 @@ import mlflow.pytorch
 from torch.utils.tensorboard import SummaryWriter
 
 from .log_utils import LOG_LAYERS
+from .custom_sampling import apply_oversampling
 
 
 
@@ -153,7 +157,10 @@ def train_model(model, dataloaders, args):
 	# Training loop
 	with tqdm(total=args.epochs, desc="Overall training progress") as pbar:
 		for epoch in range(1, args.epochs+1):
-			train_loss = train_epoch(model, dataloaders['train'], optimizer, lr_scheduler, device, writer, epoch)
+			# Apply modifications, if any, on training data for this epoch
+			epoch_train_dataloader = transform_subset(dataloaders['train'], args)
+
+			train_loss = train_epoch(model, epoch_train_dataloader, optimizer, lr_scheduler, device, writer, epoch)
 			validation_loss = validate_epoch(model, dataloaders['validation'], device)
 			training_statistics.append({
 				"epoch": epoch,
@@ -203,15 +210,34 @@ def train_model(model, dataloaders, args):
 	return model
 
 
+def transform_subset(dataloader: DataLoader, args: argparse.Namespace)-> DataLoader:
+	"""
+		Receives a DataLoader and applies modifications in the data
+		according to user requirements.
 
+		If user chose oversampling:
+			- counts occurrences of all labels in the subset;
+			- computes a per-class ratio (square root of minimum target divided
+			  by class occurrence)
+			- adds copies of samples according to per-class ratio, or caped
+			  by maximum number of copies
 
+		Parameters
+		----------
+			dataloader:
+				DataLoader with a subset of the data (train, validation or test).
+			args:
+				User arguments.
 
+		Returns
+		-------
+			A dataloader containg a (potentially) modified subset of the data.
+	"""
+	if args.oversampling_max_copies > 0 and args.oversampling_target > 0:
+		# Apply oversampling
+		oversampled_dataloader = apply_oversampling(dataloader, args)
+		return oversampled_dataloader
 
-
-
-
-
-
-
-
+	# If no transformation was applied, just return the same subset
+	return dataloader
 

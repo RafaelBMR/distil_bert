@@ -77,6 +77,19 @@ if __name__ == "__main__":
 
 	parser.add_argument('--output-path', type=pathlib.Path)
 
+	parser.add_argument('--oversampling-max-copies',
+						type=int,
+						default=0,
+						help="Maximum number of copies for each sample. "
+							 "Defaults to 0, meaning to not apply oversampling.")
+	parser.add_argument('--oversampling-target',
+						type=int,
+						default=0,
+						help="Minimum count for ignoring a class. "
+							 "If 100, for example, classes occurring 100 or more "
+							 "times in the training data won't be oversampled. "
+							 "Defaults to 0, meaning oversampling won't be applied.")
+
 	args = parser.parse_args()
 
 	run(args)
